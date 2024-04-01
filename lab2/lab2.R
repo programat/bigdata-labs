@@ -1,4 +1,4 @@
-# Создание данных
+# Create a data frame with specific values
 data <- data.frame(matrix(c(
   1, 7, 5, 9, 5, 10, 8, 5, 3, 7, 7, 9, 6, 9, 7,
   10, 1, 10, 1, 8, 1, 10, 10, 9, 10, 9, 1, 2, 9, 1,
@@ -21,69 +21,72 @@ data <- data.frame(matrix(c(
   10, NA, NA, 6, NA, NA, NA, NA, NA, NA, 5, NA, NA, NA, NA
 ), ncol = 15, byrow = TRUE))
 
-
+# Check if the file "personal_data.R" exists
 if (file.exists("personal_data.R")) {
+  # If it exists, source it
   source("personal_data.R")
 } else {
+  # If it doesn't exist, create a vector of respondent names
   respondents <- NULL
   for (i in 1:19) {
     respondents <- c(respondents, paste("Respondent", i))
   }
 }
+# Assign the respondent names as row names of the data frame
 rownames(data) <- respondents
 
-# Преобразование в таблицу с заданными именами столбцов
+# Convert the data frame to a table with specified column names
 colnames(data) <- c("Россия", "США", "Китай", "Германия", "Мексика",
                     "Великобритания", "Япония", "Индия", "ЮАР", "ОАЭ",
                     "Сингапур", "Канада", "Тайвань", "Норвегия", "Нидерланды")
+# Convert the data to integer type
 data <- apply(data, 2, as.integer)
+# Sort the data by column names
 data <- data[, order(colnames(data))]
 
+# Write the data to a CSV file
 write.csv(data, "../lab3/countries_invest.csv", fileEncoding = "UTF-8", row.names = TRUE)
 
-# Количество участников опроса
+# Calculate the number of survey participants
 num_participants <- nrow(data)
 
-# Вычисление максимума, минимума и среднего по каждому столбцу
+# Calculate the maximum, minimum, and mean for each column
 max_values <- apply(data, 2, max, na.rm = TRUE)
 min_values <- apply(data, 2, min, na.rm = TRUE)
 mean_values <- apply(data, 2, mean, na.rm = TRUE)
 
-
-# Подсчет количества людей, отдавших предпочтение >0.7 и <0.3
+# Count the number of people with a preference >0.7 and <0.3
 preference_high <- colSums(data > 7, na.rm = TRUE)
 preference_low <- colSums(data < 3, na.rm = TRUE)
 
-# Вывод результатов
+# Print the results
 cat("Максимальные значения по столбцам:", max_values, "\n")
 cat("Минимальные значения по столбцам:", min_values, "\n")
 cat("Средние значения по столбцам:", mean_values, "\n")
 cat("Количество людей с предпочтением >0.7:", preference_high, "\n")
 cat("Количество людей с предпочтением <0.3:", preference_low, "\n")
 
-# Рейтинг страны по убыванию
+# Calculate the country rating in descending order
 rating <- sort(rowMeans(data, na.rm = TRUE), decreasing = TRUE)
 cat("Рейтинг предпочтений (по убыванию):\n")
 for (i in seq_along(rating)) {
   cat(i, ": ", rating[i], "\n")
 }
 
-# Построение столбчатой диаграммы
+# Create a bar plot of the average ratings by country
 barplot(colMeans(data, na.rm = TRUE), main = "Распределение оценок по странам",
         xlab = "Столбцы", ylab = "Средняя оценка", col = "skyblue")
 
+# Create a table with the described data
 
-# Создание таблицы с описанными данными
-
-# Создание названий для новых строк
+# Create names for the new rows
 row_names <- c(seq_len(nrow(data)), "Max", "Min", "Mean", ">0.7", "<0.3")
 
-# Конвертация старых строк (1-30) в integer, новых строк (Max, Min, Mean, >0.7, <0.3) в float
+# Convert the old rows (1-30) to integer, new rows (Max, Min, Mean, >0.7, <0.3) to float
 data_summary <- as.data.frame(rbind(data, max_values, min_values, mean_values, preference_high, preference_low))
-# data_summary <- type.convert(data_summary, as.is = TRUE)
 
-# Подпись новых строк
+# Label the new rows
 rownames(data_summary) <- row_names
 
-# Вывод результатов
+# Print the results
 print(data_summary)

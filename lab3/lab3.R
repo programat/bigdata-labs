@@ -1,121 +1,127 @@
+# Load the data from a CSV file
 data <- read.csv(file='lab3/countries_invest.csv', header=TRUE)
 
-# Описательные статистики
+# Display summary statistics of the data
 summary(data)
 
-# Устанавливаем количество графиков на странице
-par(mfrow = c(3, 5)) # Можно изменить в зависимости от количества стран
+# Set the number of plots per page
+par(mfrow = c(3, 5)) # This can be changed depending on the number of countries
 
-# Проходим по каждой стране в данных
+# Loop through each country in the data
 for (i in 2:ncol(data)) {
   country <- names(data)[i]
 
-  # Строим гистограмму для текущей страны
-  hist(data[[country]], main=paste("Распределение для", country), xlab="Оценка")
+  # Plot a histogram for the current country
+  hist(data[[country]], main=paste("Distribution for", country), xlab="Rating")
 }
 
+# Reset the number of plots per page
 par(mfrow = c(1, 1))
-# Боксплоты для выявления выбросов
-boxplot(data$Россия, main="Боксплот для России", ylab="Оценка")
-boxplot(data$США, main="Боксплот для США", ylab="Оценка")
-# и так далее по остальным странам
 
-boxplot(data[,2:ncol(data)], las = 2, main="Боксплоты по странам", xlab = "", ylab = "Оценка")
+# Boxplots for identifying outliers
+boxplot(data$Russia, main="Boxplot for Russia", ylab="Rating")
+boxplot(data$USA, main="Boxplot for USA", ylab="Rating")
+# Continue for the rest of the countries
 
-# Диаграмма рассеяния
-plot(data$Россия, data$США, xlab="Россия", ylab="США", main="Россия vs США")
-plot(data$Япония, data$Норвегия, xlab="Россия", ylab="США", main="Россия vs США")
-plot(data$Китай, data$Тайвань, xlab="Россия", ylab="США", main="Россия vs США")
-# и так далее по остальным странам
+# Scatter plots
+plot(data$Russia, data$USA, xlab="Russia", ylab="USA", main="Russia vs USA")
+plot(data$Japan, data$Norway, xlab="Russia", ylab="USA", main="Russia vs USA")
+plot(data$China, data$Taiwan, xlab="Russia", ylab="USA", main="Russia vs USA")
+# Continue for the rest of the countries
 
-pairs(~ Россия + США + Китай + Германия + Великобритания,
+# Scatterplot matrix
+pairs(~ Russia + USA + China + Germany + UK,
       data = data,
-      main = "Матрица диаграмм рассеяния",
+      main = "Scatterplot Matrix",
       pch = 19)
 
-# Вычисляем корреляционную матрицу
+# Compute the correlation matrix
 cor_matrix <- cor(data[,2:ncol(data)], use = "complete.obs")
 
-# Выводим результат
+# Print the correlation matrix
 print(cor_matrix)
 
+# Wilcoxon test
 print(pairwise.wilcox.test(stack(data)$value, stack(data)$variable,
                      p.adjust.method = "holm"))
 
-
-
-# Тест Краскела-Уоллиса
+# Kruskal-Wallis test
 kruskal.test(value ~ variable, data = reshape2::melt(data[,2:ncol(data)]))
 
-# Попарные сравнения с помощью теста Вилкоксона
+# Pairwise comparisons using Wilcoxon test
 pairwise.wilcox.test(reshape2::melt(data[,2:ncol(data)])$value,
                      reshape2::melt(data[,2:ncol(data)])$variable,
                      p.adjust.method = "BH",
                      exact = FALSE)
 
+# Initialize an empty data frame
 results <- data.frame()
 
-# Получаем все уникальные значения из данных
+# Get all unique values from the data
 all_values <- sort(unique(unlist(data[,-1])))
-results <- data.frame()
-# Проходим по каждой стране в данных
+
+# Loop through each country in the data
 for (i in 2:ncol(data)) {
   country <- names(data)[i]
-  # Преобразуем данные в фактор и устанавливаем уровни
+  # Convert the data to a factor and set the levels
   data_factor <- factor(data[[country]], levels = all_values)
-  # Используем функцию table для подсчета уникальных значений
+  # Use the table function to count unique values
   temp <- as.vector(table(data_factor))
-  # Инициализируем или добавляем результаты в data.frame
+  # Initialize or append the results to the data frame
   if (i == 2) {
     results <- data.frame(temp)
   } else {
     results <- cbind(results, temp)
   }
-  # Устанавливаем имя столбца в соответствии с именем страны
+  # Set the column name according to the country name
   colnames(results)[ncol(results)] <- country
 }
 
+# Print the results
 print(results)
 
+# Sort the data by Russia in descending order
+data_sorted <- data[order(data$Russia, decreasing = TRUE),]
 
+# Sort the data by multiple countries
+data_sorted <- data[order(data$Russia, data$USA, data$Germany, data$UK, data$China),]
 
-data_sorted <- data[order(data$Россия, decreasing = TRUE),]
-data_sorted <- data[order(data$Россия, data$США, data$Германия, data$Великобритания, data$Китай),]
+# Print the top 10 rows of the sorted data
 head(data_sorted, 10)
 
-# Формирование отдельных наборов данных по странам (оценка > 7)
-data_russia <- data_sorted[data_sorted$Россия > 7, ]
-data_usa <- data_sorted[data_sorted$США > 7, ]
-data_germany <- data_sorted[data_sorted$Германия > 7, ]
-data_uk <- data_sorted[data_sorted$Великобритания > 7, ]
-data_china <- data_sorted[data_sorted$Китай > 7, ]
+# Create separate data sets for each country (rating > 7)
+data_russia <- data_sorted[data_sorted$Russia > 7, ]
+data_usa <- data_sorted[data_sorted$USA > 7, ]
+data_germany <- data_sorted[data_sorted$Germany > 7, ]
+data_uk <- data_sorted[data_sorted$UK > 7, ]
+data_china <- data_sorted[data_sorted$China > 7, ]
 
-# Размерности полученных наборов данных
+# Print the number of rows in each data set
 nrow(data_russia)
 nrow(data_usa)
 nrow(data_germany)
 nrow(data_uk)
 nrow(data_china)
 
-# Анализ новых наборов данных
-# Гистограммы
+# Analyze the new data sets
+# Histograms
 par(mfrow = c(2, 5))
-hist(data_russia$Россия, main = "Россия (оценка > 7)", xlab = "Оценка")
-hist(data_usa$США, main = "США (оценка > 7)", xlab = "Оценка")
-hist(data_germany$Германия, main = "Германия (оценка > 7)", xlab = "Оценка")
-hist(data_uk$Великобритания, main = "Великобритания (оценка > 7)", xlab = "Оценка")
-hist(data_china$Китай, main = "Китай (оценка > 7)", xlab = "Оценка")
+hist(data_russia$Russia, main = "Russia (rating > 7)", xlab = "Rating")
+hist(data_usa$USA, main = "USA (rating > 7)", xlab = "Rating")
+hist(data_germany$Germany, main = "Germany (rating > 7)", xlab = "Rating")
+hist(data_uk$UK, main = "UK (rating > 7)", xlab = "Rating")
+hist(data_china$China, main = "China (rating > 7)", xlab = "Rating")
 
-# Боксплоты
-boxplot(data_russia$Россия, main = "Россия (оценка > 7)", ylab = "Оценка")
-boxplot(data_usa$США, main = "США (оценка > 7)", ylab = "Оценка")
-boxplot(data_germany$Германия, main = "Германия (оценка > 7)", ylab = "Оценка")
-boxplot(data_uk$Великобритания, main = "Великобритания (оценка > 7)", ylab = "Оценка")
-boxplot(data_china$Китай, main = "Китай (оценка > 7)", ylab = "Оценка")
+# Boxplots
+boxplot(data_russia$Russia, main = "Russia (rating > 7)", ylab = "Rating")
+boxplot(data_usa$USA, main = "USA (rating > 7)", ylab = "Rating")
+boxplot(data_germany$Germany, main = "Germany (rating > 7)", ylab = "Rating")
+boxplot(data_uk$UK, main = "UK (rating > 7)", ylab = "Rating")
+boxplot(data_china$China, main = "China (rating > 7)", ylab = "Rating")
 
-# Описательные статистики
-summary(data_russia$Россия)
-summary(data_usa$США)
-summary(data_germany$Германия)
-summary(data_uk$Великобритания)
-summary(data_china$Китай)
+# Summary statistics
+summary(data_russia$Russia)
+summary(data_usa$USA)
+summary(data_germany$Germany)
+summary(data_uk$UK)
+summary(data_china$China)
