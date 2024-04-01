@@ -1,0 +1,6 @@
+# Ignore all .csv files
+*.csv
+# Ignore all files in the test directory
+test/
+# Ignore the file personal_data.R
+personal_data.R
