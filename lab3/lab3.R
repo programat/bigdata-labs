@@ -18,19 +18,20 @@ for (i in 2:ncol(data)) {
 # Reset the number of plots per page
 par(mfrow = c(1, 1))
 
+
 # Boxplots for identifying outliers
-boxplot(data$Russia, main="Boxplot for Russia", ylab="Rating")
-boxplot(data$USA, main="Boxplot for USA", ylab="Rating")
+boxplot(data$Россия, main="Boxplot for Russia", ylab="Rating")
+boxplot(data$США, main="Boxplot for USA", ylab="Rating")
 # Continue for the rest of the countries
 
 # Scatter plots
-plot(data$Russia, data$USA, xlab="Russia", ylab="USA", main="Russia vs USA")
-plot(data$Japan, data$Norway, xlab="Russia", ylab="USA", main="Russia vs USA")
-plot(data$China, data$Taiwan, xlab="Russia", ylab="USA", main="Russia vs USA")
+plot(data$Россия, data$США, xlab="Russia", ylab="USA", main="Russia vs USA")
+plot(data$Япония, data$Норвегия, xlab="Russia", ylab="USA", main="Russia vs USA")
+plot(data$Китай, data$Тайвань, xlab="Russia", ylab="USA", main="Russia vs USA")
 # Continue for the rest of the countries
 
 # Scatterplot matrix
-pairs(~ Russia + USA + China + Germany + UK,
+pairs(~ Россия + США + Китай + Германия + Великобритания,
       data = data,
       main = "Scatterplot Matrix",
       pch = 19)
@@ -81,20 +82,20 @@ for (i in 2:ncol(data)) {
 print(results)
 
 # Sort the data by Russia in descending order
-data_sorted <- data[order(data$Russia, decreasing = TRUE),]
+data_sorted <- data[order(data$Россия, decreasing = TRUE),]
 
 # Sort the data by multiple countries
-data_sorted <- data[order(data$Russia, data$USA, data$Germany, data$UK, data$China),]
+data_sorted <- data[order(data$Россия, data$США, data$Германия, data$Великобритания, data$Китай),]
 
 # Print the top 10 rows of the sorted data
 head(data_sorted, 10)
 
 # Create separate data sets for each country (rating > 7)
-data_russia <- data_sorted[data_sorted$Russia > 7, ]
-data_usa <- data_sorted[data_sorted$USA > 7, ]
-data_germany <- data_sorted[data_sorted$Germany > 7, ]
-data_uk <- data_sorted[data_sorted$UK > 7, ]
-data_china <- data_sorted[data_sorted$China > 7, ]
+data_russia <- data_sorted[data_sorted$Россия > 7, ]
+data_usa <- data_sorted[data_sorted$США > 7, ]
+data_germany <- data_sorted[data_sorted$Германия > 7, ]
+data_uk <- data_sorted[data_sorted$Великобритания > 7, ]
+data_china <- data_sorted[data_sorted$Китай > 7, ]
 
 # Print the number of rows in each data set
 nrow(data_russia)
@@ -106,22 +107,22 @@ nrow(data_china)
 # Analyze the new data sets
 # Histograms
 par(mfrow = c(2, 5))
-hist(data_russia$Russia, main = "Russia (rating > 7)", xlab = "Rating")
-hist(data_usa$USA, main = "USA (rating > 7)", xlab = "Rating")
-hist(data_germany$Germany, main = "Germany (rating > 7)", xlab = "Rating")
-hist(data_uk$UK, main = "UK (rating > 7)", xlab = "Rating")
-hist(data_china$China, main = "China (rating > 7)", xlab = "Rating")
+hist(data_russia$Россия, main = "Russia (rating > 7)", xlab = "Rating")
+hist(data_usa$США, main = "USA (rating > 7)", xlab = "Rating")
+hist(data_germany$Германия, main = "Germany (rating > 7)", xlab = "Rating")
+hist(data_uk$Великобритания, main = "UK (rating > 7)", xlab = "Rating")
+hist(data_china$Китай, main = "China (rating > 7)", xlab = "Rating")
 
 # Boxplots
-boxplot(data_russia$Russia, main = "Russia (rating > 7)", ylab = "Rating")
-boxplot(data_usa$USA, main = "USA (rating > 7)", ylab = "Rating")
-boxplot(data_germany$Germany, main = "Germany (rating > 7)", ylab = "Rating")
-boxplot(data_uk$UK, main = "UK (rating > 7)", ylab = "Rating")
-boxplot(data_china$China, main = "China (rating > 7)", ylab = "Rating")
+boxplot(data_russia$Россия, main = "Russia (rating > 7)", ylab = "Rating")
+boxplot(data_usa$США, main = "USA (rating > 7)", ylab = "Rating")
+boxplot(data_germany$Германия, main = "Germany (rating > 7)", ylab = "Rating")
+boxplot(data_uk$Великобритания, main = "UK (rating > 7)", ylab = "Rating")
+boxplot(data_china$Китай, main = "China (rating > 7)", ylab = "Rating")
 
 # Summary statistics
-summary(data_russia$Russia)
-summary(data_usa$USA)
-summary(data_germany$Germany)
-summary(data_uk$UK)
-summary(data_china$China)
+summary(data_russia$Россия)
+summary(data_usa$США)
+summary(data_germany$Германия)
+summary(data_uk$Великобритания)
+summary(data_china$Китай)
