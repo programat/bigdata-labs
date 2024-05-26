@@ -1,4 +1,4 @@
-# lab6_theory.R
+# lab6-1_theory.R
 
 # fix(iris)
 labels_iris <- iris[,5] # extract the labels
