@@ -45,6 +45,8 @@ boxplot(data$Age, main = "Age", col = "orange")
 boxplot(data$Height, main = "Height", col = "purple")
 boxplot(data$Weight, main = "Weight", col = "cyan")
 
+
+numeric_data <- data %>% select(Age, Height, Weight)
 pairs(numeric_data, main = "Scatterplot Matrix", col="4")
 
 table(data$Sex)

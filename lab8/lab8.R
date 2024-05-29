@@ -1,7 +1,7 @@
 # lab8.R
 
 # libraries needed for the script
-required_packages <- c("psych", "ggplot2", "corrplot", "dplyr", "car")
+required_packages <- c("psych", "ggplot2", "corrplot", "dplyr", "car", "tidyr")
 
 # Function to install and load required packages
 install_and_load <- function(packages) {
@@ -38,7 +38,7 @@ colnames(serbia_data) <- c("GDP_current_USD", "GDP_growth_annual", "Births_atten
                            "Goods_imports_BoP", "Exports_goods_services_growth", "Death_rate_crude",
                            "Educational_attainment_Bachelors_total", "Educational_attainment_Bachelors_female",
                            "High_tech_exports", "Medium_high_tech_Industry", "Scientific_articles")
-serbia_data <- serbia_data[-1, ]
+serbia_data <- serbia_data[-1,]
 rownames(serbia_data) <- 1989:2018
 
 # Convert data to numeric format
@@ -55,7 +55,7 @@ serbia_data_long <- serbia_data %>%
 # Histograms
 ggplot(serbia_data_long, aes(x = Value)) +
   geom_histogram(fill = "blue", color = "black") +
-  facet_wrap(~ Indicator, scales = "free") +
+  facet_wrap(~Indicator, scales = "free") +
   theme_minimal() +
   labs(title = "Histograms of Indicators for Serbia")
 
